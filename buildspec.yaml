@@ -1,23 +1,28 @@
-version: 0.1
+version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      nodejs: 18
     commands:
-      - echo installing nodejs...
-      - curl -sL https://deb.nodesource.com/setup_12.x | bash -
-      - apt-get install -y nodejs  #aws code build use ubuntu environement
+      - echo Installing Node.js...
+      - apt-get update
+      - apt-get install -y nodejs
+      - echo Installing Chrome...
+      - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      - apt-get install -y ./google-chrome-stable_current_amd64.deb
   pre_build:
     commands:
-      - echo installing dependencies...
-      - npm i -g @angular/cli
+      - echo Installing dependencies...
+      - npm install -g @angular/cli
       - npm install
   build:
     commands:
-      # - echo testing...
-      # - echo building...
+      - echo Building the project...
       - ng build --prod
   post_build:
     commands:
+      - echo Moving appspec.yml and scripts...
       - mv appspec.yml ./dist/my-dream-app
       - mv scripts ./dist/my-dream-app
 artifacts:
